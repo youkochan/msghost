@@ -30,7 +30,7 @@
       <view class="button sub" catchtap="onSubGhostTap">-</view>
     </view>
 
-    <button class="homeButton" catchtap="onCreateFinish"><text>创建完成</text></button>  
+    <button class="homeButton" catchtap="onCreateFinish" open-type="getUserInfo"><text>创建完成</text></button>  
   </view>
 
   <view class="actionCard {{ isPresentingJoinCard ? 'presenting' : '' }}">

@@ -49,10 +49,7 @@ Page({
     const db = wx.cloud.database()
 
     wx.getSetting()
-      .then(res => { 
-        if (res.authSetting['scope.userInfo']) { return wx.getUserInfo() }
-        throw Error('获取用户信息失败') 
-      })
+      .then(res => {  if (res.authSetting['scope.userInfo']) { return wx.getUserInfo() } throw Error('获取用户信息失败') })
       .then(res => wx.cloud.callFunction({ name: 'updateInfo', data: { userInfo: res.userInfo } }))
       .then(_ => { this.onJoinGame() })
       .catch(err => { wx.showModal({ title: '出错了', content: err.message, showCancel: false }) })
@@ -80,7 +77,10 @@ Page({
   },
 
   onCreateFinish: function () {
-    wx.cloud.callFunction({ name: 'createRoom', data: { game: this.data.game } })
+    wx.getSetting()
+      .then(res => {  if (res.authSetting['scope.userInfo']) { return wx.getUserInfo() } throw Error('获取用户信息失败') })
+      .then(res => wx.cloud.callFunction({ name: 'updateInfo', data: { userInfo: res.userInfo } }))
+      .then(res => { return wx.cloud.callFunction({ name: 'createRoom', data: { game: this.data.game } }) })
       .then(res => { console.log(res); return res; })
       .then(res => { wx.navigateTo({ url: '../game/game?id=' + res.result._id }) })
       .catch(err => {  wx.showModal({ title: '出错啦', content: err.message, showCancel: false }) })
