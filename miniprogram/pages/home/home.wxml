@@ -1,0 +1,44 @@
+<view class="main">
+  <view class="container {{ isPresentingCreatingCard || isPresentingJoinCard ? 'blur' : '' }}" bindtap="onCancelTap" >
+    <button class="homeButton" bindgetuserinfo="onJoinTap" open-type="getUserInfo"><text>加入捉鬼</text></button>
+    <button class="homeButton" catchtap="onCreateTap"><text>创建捉鬼</text></button>
+  </view>
+
+  <view class="actionCard {{ isPresentingCreatingCard ? 'presenting' : '' }}">
+    <view class="inputGroup">
+      <view class="input">
+        <input type="text" confirm-type="done" name="majority" value="{{value}}" bindblur="onMajorityWordConfirm" placeholder="多数派词语" />
+      </view>
+      <view class="button add" catchtap="onAddMajorityTap">+</view>
+      <view class="num">{{ game.majority }}</view>
+      <view class="button sub" catchtap="onSubMajorityTap">-</view>
+    </view>
+    
+    <view class="inputGroup">
+      <view class="input">
+        <input type="text" confirm-type="done" name="minority" value="{{value}}" bindblur="onMinorityWordConfirm" placeholder="少数派词语" />
+      </view>
+      <view class="button add" catchtap="onAddMinorityTap">+</view>
+      <view class="num">{{ game.minority }}</view>
+      <view class="button sub" catchtap="onSubMinorityTap">-</view>
+    </view>
+    
+    <view class="inputGroup">
+      <view class="input"><text>鬼</text></view>
+      <view class="button add" catchtap="onAddGhostTap">+</view>
+      <view class="num">{{ game.ghost }}</view>
+      <view class="button sub" catchtap="onSubGhostTap">-</view>
+    </view>
+
+    <button class="homeButton" catchtap="onCreateFinish"><text>创建完成</text></button>  
+  </view>
+
+  <view class="actionCard {{ isPresentingJoinCard ? 'presenting' : '' }}">
+    <view class="inputGroup">
+      <view class="input">
+        <input type="text" confirm-type="done" value="" bindblur="onTargetRoomUpdated" placeholder="房间号" />
+      </view>
+    </view>
+    <button class="homeButton" catchtap="onJoinFinish"><text>确定</text></button>  
+  </view>
+</view>

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "miniprogram-api-promise": "^1.0.4"
+  }
+}

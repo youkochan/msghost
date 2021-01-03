@@ -1,0 +1,58 @@
+<view class="game" wx:if="{{ game }}">
+  <view class="title">
+    <view class="card">
+      <text class="h2" wx:if="{{ game.status === 0 }}">{{ game.shortcut}} 房间状态：准备中</text>
+      <text class="h2" wx:if="{{ game.status === 1 }}">{{ game.shortcut}} 房间状态：进行中</text>
+      <text class="h2" wx:if="{{ game.status === 2 }}">{{ game.shortcut}} 房间状态：已结束</text>
+      <text class="h1" wx:if="{{ game.status === 2 && game.winner === 0 }}">人类获胜</text>
+      <text class="h1" wx:if="{{ game.status === 2 && game.winner === 1 }}">鬼获胜</text>
+      <text class="h1" wx:if="{{ openid && players[openid].role === 0 }}">你的身份是：裁判</text>
+      <text class="h1" wx:if="{{ openid && players[openid].role === 1 }}">你的词是：「{{ game.majorityWord }}」</text>
+      <text class="h1" wx:if="{{ openid && players[openid].role === 2 }}">你的词是：「{{ game.minorityWord }}」</text>
+      <text class="h1" wx:if="{{ openid && players[openid].role === 3 }}">你的词是：「{{ game.minorityWord.length }}个字」</text>
+      <text class="h3">多数派-少数派-鬼：{{ game.majority }}-{{ game.minority }}-{{ game.ghost }}</text>
+    </view>
+  </view>
+  <scroll-view class="list" scroll-y="true">
+    <view wx:key="openid" wx:if="{{ userInfo[item.openid] }}" class="item" wx:for="{{ players }}">
+      <image class="avatar" mode="aspectFill" src="{{ userInfo[item.openid].avatarUrl }}" />
+
+      <!--裁判视角，直接看到身份且不能备注-->
+      <view class="info" wx:if="{{ players[openid].role === 0 }}">
+        <text class="nickname">{{ userInfo[item.openid].nickName }}</text>
+        <text class="note" wx:if="{{ item.role === 1 }}">「{{ game.majorityWord }}」</text>
+        <text class="note" wx:if="{{ item.role === 2 }}">「{{ game.minorityWord }}」</text>
+        <text class="note" wx:if="{{ item.role === 3 }}">鬼</text>
+      </view>
+      <!--玩家视角，游戏未开始-->
+      <view class="info" wx:elif="{{ game.status === 0 }}">
+        <text class="nickname">{{ userInfo[item.openid].nickName }}</text>
+      </view>
+      <!--玩家视角，游戏过程中看到备注-->
+      <view class="info" wx:elif="{{ game.status === 1 }}" catchtap="onAddNote" data-openid="{{ item.openid }}">
+        <text class="nickname">{{ userInfo[item.openid].nickName }}</text>
+        <text class="note" wx:if="{{ noteInfo[item.openid] && targetOpenid !== item.openid }}">“{{ noteInfo[item.openid] }}”</text>
+        <input class="note" wx:if="{{ targetOpenid === item.openid }}" focus="targetOpenid === item.openid" bindblur="onInputBlur"></input>
+      </view>
+      <!--玩家视角，游戏结束后看到身份-->
+      <view class="info" wx:elif="{{ game.status === 2 }}">
+        <text class="nickname">{{ userInfo[item.openid].nickName }}</text>
+        <text class="note" wx:if="{{ item.role === 1 }}">「{{ game.majorityWord }}」</text>
+        <text class="note" wx:if="{{ item.role === 2 }}">「{{ game.minorityWord }}」</text>
+        <text class="note" wx:if="{{ item.role === 3 }}">鬼</text>
+      </view>
+      
+      <view wx:if="{{ openid === game._openid || item.role === 0 || game.status === 2 }}" class="detail">
+        <view class="c0" wx:if="{{ item.role === 0 }}">裁判</view>
+        <view class="c1" wx:if="{{ item.role === 1 }}">多数派</view>
+        <view class="c2" wx:if="{{ item.role === 2 }}">少数派</view>
+        <view class="c3" wx:if="{{ item.role === 3 }}">鬼</view>
+      </view>
+    </view>
+  </scroll-view>
+</view>
+
+<view class="buttonWrapper" wx:if="{{ game && players[openid].role === 0 }}">
+  <button wx:if="{{ game.status === 0 }}" class="button" catchtap="onStartGame">开始捉鬼</button>
+  <button wx:if="{{ game.status === 1 }}" class="button" catchtap="onEndGame">结束捉鬼</button>
+</view>
