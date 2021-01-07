@@ -21,10 +21,7 @@ Page({
     this.setData({ 
       "isPresentingCreatingCard": true,
       "game.majorityWord": "",
-      "game.minorityWord": "",
-      "game.majority": 0,
-      "game.minority": 0,
-      "game.ghost": 0,
+      "game.minorityWord": ""
     }) 
   },
 
@@ -34,56 +31,42 @@ Page({
   }) },
 
   onMajorityWordConfirm: function(event) { this.setData({ "game.majorityWord": event.detail.value }) },
-  onMinorityWordConfirm: function(event) { this.setData({ "game.minorityWord": event.detail.value }) },
-
-  onAddGhostTap: function() { this.setData({ "game.ghost": this.data.game.ghost + 1 }) },
-  onSubGhostTap: function() { this.setData({ "game.ghost": Math.max(0, this.data.game.ghost - 1) }) },
-
-  onAddMajorityTap: function() { this.setData({ "game.majority": this.data.game.majority + 1 }) },
-  onSubMinorityTap: function() { this.setData({ "game.minority": Math.max(0, this.data.game.minority - 1) }) },
-
-  onAddMinorityTap: function() { this.setData({ "game.minority": this.data.game.minority + 1 }) },
-  onSubMajorityTap: function() { this.setData({ "game.majority": Math.max(0, this.data.game.majority - 1) }) },
-  
-  onJoinTap: function() {
-    const db = wx.cloud.database()
-
-    wx.getSetting()
-      .then(res => {  if (res.authSetting['scope.userInfo']) { return wx.getUserInfo() } throw Error('获取用户信息失败') })
-      .then(res => wx.cloud.callFunction({ name: 'updateInfo', data: { userInfo: res.userInfo } }))
-      .then(_ => { this.onJoinGame() })
-      .catch(err => { wx.showModal({ title: '出错了', content: err.message, showCancel: false }) })
-  },
-
-  onJoinGame: function() {
-    this.setData({ isPresentingJoinCard: true })
-  },
-
-  onTargetRoomUpdated: function(e) {
-    this.setData({ targetRoomid: e.detail.value })
-  },
+  onMinorityWordConfirm: function(event) { this.setData({ "game.minorityWord": event.detail.value }) },  
+  onJoinTap: function() { this.setData({ targetRoomid: '', isPresentingJoinCard: true }) },
+  onTargetRoomUpdated: function(e) { this.setData({ targetRoomid: e.detail.value }) },
 
   onJoinFinish: function() {
     this.setData({ isPresentingJoinCard: false })
-
+    
     const db = wx.cloud.database()
-    const _ = db.command
-
-    db.collection('ghost').where(_.or([{ status: 0 }, { status: 1 }]).and({ shortcut: this.data.targetRoomid })).limit(1).get()
+    const cmd = db.command
+    const targetRoomid = this.data.targetRoomid
+    
+    new Promise((resolve, reject) => { if (targetRoomid) { resolve(targetRoomid) } reject(Error('房间号为空')) })
+      .then(_ => wx.getSetting())
+      .then(res => { if (res.authSetting['scope.userInfo']) { return wx.getUserInfo() } throw Error('获取用户信息失败') })
+      .then(res => wx.cloud.callFunction({ name: 'updateInfo', data: { userInfo: res.userInfo } }))
+      .then(_ => db.collection('ghost').where(cmd.or([{ status: 0 }, { status: 1 }]).and({ shortcut: targetRoomid })).limit(1).get())
       .then(res => { if (res.data[0] && res.data[0]._id) { return res.data[0]._id } throw Error('找不到房间') })
       .then(gameid => { wx.navigateTo({ url: '../game/game?id=' + gameid }) })
-      .catch(err => { wx.showModal({ title: '出错了', content: err.message, showCancel: false }) })
-      .finally(res => { this.setData({ targetRoomid: undefined }) })
+      .then(_ => { this.setData({ targetRoomid: undefined }) })
+      .catch(err => { wx.showModal({ title: '加入房间出错', content: err.message, showCancel: false }) })
   },
 
   onCreateFinish: function () {
-    wx.getSetting()
-      .then(res => {  if (res.authSetting['scope.userInfo']) { return wx.getUserInfo() } throw Error('获取用户信息失败') })
-      .then(res => wx.cloud.callFunction({ name: 'updateInfo', data: { userInfo: res.userInfo } }))
-      .then(res => { return wx.cloud.callFunction({ name: 'createRoom', data: { game: this.data.game } }) })
-      .then(res => { console.log(res); return res; })
-      .then(res => { wx.navigateTo({ url: '../game/game?id=' + res.result._id }) })
-      .catch(err => {  wx.showModal({ title: '出错啦', content: err.message, showCancel: false }) })
-      .finally(res => { this.onCancelTap() })
+    new Promise((resolve, reject) => { if (this.data.game) { resolve(this.data.game) } reject(Error('游戏数据为空')) })
+      .then(game => { if (game.majorityWord && typeof(game.majorityWord) === 'string') { return game } throw Error('多数派词语非法') })
+      .then(game => { if (game.minorityWord && typeof(game.minorityWord) === 'string') { return game } throw Error('少数派词语非法') })
+      .then(game => { if (game.majorityWord.length === game.minorityWord.length) { return game } throw Error('多数派与少数派字数不相等') })
+      .then(_ => { this.onCancelTap(); return wx.getSetting() })
+      .then(res => { if (res.authSetting['scope.userInfo']) { return wx.getUserInfo() } throw Error('获取用户信息失败') })
+      .then(res => Promise.all([
+        wx.cloud.callFunction({ name: 'updateInfo', data: { userInfo: res.userInfo } }),
+        wx.cloud.callFunction({ name: 'createRoom', data: { game: this.data.game } })
+      ]))
+      .then(res => res[1].result._id)
+      .then(gameid => { if (gameid) { return gameid } throw Error('找不到房间') })
+      .then(gameid => { wx.navigateTo({ url: '../game/game?id=' + gameid }) })
+      .catch(err => {  wx.showModal({ title: '创建游戏出错', content: err.message, showCancel: false }) })
   }
 })

@@ -10,7 +10,7 @@
       <text class="h1" wx:if="{{ openid && players[openid].role === 1 }}">你的词是：「{{ game.majorityWord }}」</text>
       <text class="h1" wx:if="{{ openid && players[openid].role === 2 }}">你的词是：「{{ game.minorityWord }}」</text>
       <text class="h1" wx:if="{{ openid && players[openid].role === 3 }}">你的词是：「{{ game.minorityWord.length }}个字」</text>
-      <text class="h3">多数派-少数派-鬼：{{ game.majority }}-{{ game.minority }}-{{ game.ghost }}</text>
+      <text class="h3" wx:if="{{ game.status !== 0 }}">多数派-少数派-鬼：{{ game.majority }}-{{ game.minority }}-{{ game.ghost }}</text>
     </view>
   </view>
   <scroll-view class="list" scroll-y="true">
@@ -24,15 +24,24 @@
         <text class="note" wx:if="{{ item.role === 2 }}">「{{ game.minorityWord }}」</text>
         <text class="note" wx:if="{{ item.role === 3 }}">鬼</text>
       </view>
-      <!--玩家视角，游戏未开始-->
-      <view class="info" wx:elif="{{ game.status === 0 }}">
+      <!--玩家视角，游戏未开始或者玩家身份是裁判-->
+      <view class="info" wx:elif="{{ game.status === 0 || item.role === 0 }}">
         <text class="nickname">{{ userInfo[item.openid].nickName }}</text>
       </view>
-      <!--玩家视角，游戏过程中看到备注-->
-      <view class="info" wx:elif="{{ game.status === 1 }}" catchtap="onAddNote" data-openid="{{ item.openid }}">
+      <!--玩家视角，游戏过程中可以添加备注-->
+      <view class="info" wx:elif="{{ game.status === 1 && targetOpenid === '' }}" catchtap="onAddNote" data-openid="{{ item.openid }}">
         <text class="nickname">{{ userInfo[item.openid].nickName }}</text>
-        <text class="note" wx:if="{{ noteInfo[item.openid] && targetOpenid !== item.openid }}">“{{ noteInfo[item.openid] }}”</text>
-        <input class="note" wx:if="{{ targetOpenid === item.openid }}" focus="targetOpenid === item.openid" bindblur="onInputBlur"></input>
+        <text class="note" wx:if="{{ noteInfo[item.openid] }}">“{{ noteInfo[item.openid] }}”</text>
+      </view>
+      <!--玩家视角，游戏过程中可以添加备注-->
+      <view class="info" wx:elif="{{ game.status === 1 && targetOpenid !== item.openid }}">
+        <text class="nickname">{{ userInfo[item.openid].nickName }}</text>
+        <text class="note" wx:if="{{ noteInfo[item.openid] }}">“{{ noteInfo[item.openid] }}”</text>
+      </view>
+      <!--玩家视角，游戏过程中输入备注-->
+      <view class="info" wx:elif="{{ game.status === 1 && targetOpenid === item.openid }}">
+        <text class="nickname">{{ userInfo[item.openid].nickName }}</text>
+        <input class="note" focus="targetOpenid === item.openid" value="{{  }}" bindblur="onInputBlur"></input>
       </view>
       <!--玩家视角，游戏结束后看到身份-->
       <view class="info" wx:elif="{{ game.status === 2 }}">

@@ -35,53 +35,29 @@ Page({
   onLoad: function (options) {
     const db = wx.cloud.database()
 
-    wx.cloud.callFunction({ name: 'joinRoom', data: { id: options.id } })
-      .then(res => { this.setData({ openid: res.result.openid, gameid: res.result.gameid }); return res.result.gameid; })
+    wx.cloud.callFunction({ name: 'joinRoomV2', data: { id: options.id } })
+      .then(res => res.result)
+      .then(result => { if (result.error) { throw Error(result.error) } return result })
+      .then(result => { this.setData({ openid: result.openid, gameid: result.gameid }); return result.gameid })
       .then(gameid => { 
-        db.collection('ghost').doc(gameid).watch({ onChange: this.onGameChange, onError: this.onGameError })
-        db.collection('r_user_ghost').where({ gameid: gameid }).watch({ onChange: this.onPlayersChange, onError: this.onGameError })
-      })
-      .catch(err => { 
-        wx.showModal({
-          title: '出错了',
-          content: err.message,
-          showCancel: false,
-          success: res => { wx.redirectTo({ url: '../home/home' }) }
+        db.collection('ghost').doc(gameid).watch({
+          onChange: this.onGameChange,
+          onError: this.onGameError
+        })
+        db.collection('r_user_ghost').where({ gameid: gameid }).watch({
+          onChange: this.onPlayersChange, onError: this.onGameError
         })
       })
-  },
-
-  onReady: function () {
-
-  },
-
-  onShow: function () {
-
-  },
-
-  onHide: function () {
-
-  },
-
-  onUnload: function () {
-
-  },
-
-  onPullDownRefresh: function () {
-
-  },
-
-  onReachBottom: function () {
-
-  },
-
-  onShareAppMessage: function () {
-
+      .catch(err => { 
+        wx.showModal({ title: '加入房间失败', content: err.message, showCancel: false, success: res => { wx.redirectTo({ url: '../home/home' }) } })
+      })
   },
 
   onStartGame: function() {
-    wx.cloud.callFunction({ name: 'startGame', data: { id: this.data.gameid } })
-      .catch(err => { wx.showModal({ title: '出错了', content: err.message, showCancel: false}) })
+    wx.cloud.callFunction({ name: 'startGameV2', data: { id: this.data.gameid } })
+      .then(res => res.result)
+      .then(result => { if (result.error) { throw Error(result.error) } return result })
+      .catch(err => { wx.showModal({ title: '开始游戏失败', content: err.message, showCancel: false}) })
   },
 
   onEndGame: function() {
@@ -90,18 +66,24 @@ Page({
       itemList: itemList,
       success: res => {
         wx.cloud.callFunction({ name: 'endGame', data: { id: this.data.gameid, winner: res.tapIndex } })
-          .catch(err => { wx.showModal({ title: '出错了', content: err.message, showCancel: false}) })
+          .catch(err => { wx.showModal({ title: '结束游戏出错', content: err.message, showCancel: false}) })
       }
     })
   },
 
   onAddNote: function(p) {
-    const openid = p.currentTarget.dataset.openid
-    if (openid) { this.setData({ targetOpenid: openid }) }
+    if (this.data.targetOpenid) {
+      this.setData({ targetOpenid: '', noteInfo: noteInfo })
+    }
+    else {
+      const openid = p.currentTarget.dataset.openid
+      if (openid) {
+        this.setData({ targetOpenid: openid })
+      }
+    }
   },
 
   onInputBlur: function(e) {
-    console.log('onInputBlur', e)
     var noteInfo = this.data.noteInfo
     noteInfo[this.data.targetOpenid] = e.detail.value
     this.setData({ targetOpenid: '', noteInfo: noteInfo })

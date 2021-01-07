@@ -80,36 +80,6 @@
   flex: 1;
 }
 
-.actionCard .inputGroup .button {
-  height: 30px;
-  width: 30px;
-  border-radius: 15px;
-  text-align: center;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-.actionCard .inputGroup .add {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background-color: #fa8181;
-}
-
-.actionCard .inputGroup .sub {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background-color: #28ceaa;
-}
-
-.actionCard .inputGroup .num {
-  width: 20px;
-  text-align: center;
-}
-
 .actionCard.presenting {
   top: 40%;
   opacity: 1;
