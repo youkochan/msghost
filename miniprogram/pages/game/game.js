@@ -45,11 +45,16 @@ Page({
           onError: this.onGameError
         })
         db.collection('r_user_ghost').where({ gameid: gameid }).watch({
-          onChange: this.onPlayersChange, onError: this.onGameError
+          onChange: this.onPlayersChange,
+          onError: this.onGameError
         })
       })
       .catch(err => { 
-        wx.showModal({ title: '加入房间失败', content: err.message, showCancel: false, success: res => { wx.redirectTo({ url: '../home/home' }) } })
+        wx.showModal({
+          title: '加入房间失败',
+          content: err.message, showCancel: false,
+          success: res => { wx.redirectTo({ url: '../home/home' }) }
+        })
       })
   },
 

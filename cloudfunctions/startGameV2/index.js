@@ -20,7 +20,7 @@ exports.main = async (event, context) => {
 
     if (!game) { throw Error('无法找到房间') }
     if (game.status !== 0) { throw Error('游戏已开始') }
-    if (openids.length < 4) { throw Error('房间人数不足，无法开始游戏') }
+    if (openids.length < 7) { throw Error('房间人数不足，无法开始游戏') }
 
     var sortedOpenids = openids
     sortedOpenids.sort(_ => { return .5 - Math.random() })

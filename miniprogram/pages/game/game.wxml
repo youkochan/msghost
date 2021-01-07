@@ -41,7 +41,7 @@
       <!--玩家视角，游戏过程中输入备注-->
       <view class="info" wx:elif="{{ game.status === 1 && targetOpenid === item.openid }}">
         <text class="nickname">{{ userInfo[item.openid].nickName }}</text>
-        <input class="note" focus="targetOpenid === item.openid" value="{{  }}" bindblur="onInputBlur"></input>
+        <input class="note" focus="targetOpenid === item.openid" value="{{ noteInfo[item.openid] }}" bindblur="onInputBlur"></input>
       </view>
       <!--玩家视角，游戏结束后看到身份-->
       <view class="info" wx:elif="{{ game.status === 2 }}">
