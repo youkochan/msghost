@@ -12,35 +12,51 @@
 
 .game .title {
   width: auto;
-  height: 20vh;
-  min-height: 20vh;
+  height: 130px;
   display: flex;
-  padding-top: 2vh;
-  padding-bottom: 2vh;
   flex-shrink: 0;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .3s;
 }
 
 .game .title .card {
   width: 100%;
   height: 100%;
+  backface-visibility: hidden;
+  position: absolute;
+  display: flex;
+}
+
+.game .title .card.back {
+	transform: rotateX(180deg);
+}
+
+.flipped {
+	transform: rotateX(180deg);
+}
+
+.game .title .card .textWrapper {
   background-color: #42a895;
-  border: #3c9b89 solid 1px;
-  border-radius: 20px;
-  box-shadow: 0px 5px 10px #42a895;
-  margin-left: 8vw;
-  margin-right: 8vw;
+  margin: 10px 20px;
+  box-shadow: 0px 5px 10px #999999;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
+  flex: 1;
+  border-radius: 10px;
+}
+.game .title .card.back .textWrapper {
+  background-color: #e97577;
 }
 
-.game .title .card text {
+.game .title .card .textWrapper text {
   text-align: center;
   color: white;
   margin-top: 6px;
 }
-.game .title .card text:first-child {
+.game .title .card .textWrapper text:first-child {
   margin-top: 0px;
 }
 
@@ -55,8 +71,6 @@
 }
 
 .game .list {
-  border-top-left-radius: 8vw;
-  border-top-right-radius: 8vw;
   width: 100%;
   height: 1rpx;
   background: white;
@@ -64,24 +78,44 @@
   flex: 1;
 }
 
+.game .list .itemWrapper {
+  padding-top: 8px;
+}
+.game .list .itemWrapper:first-child {
+  padding-top: 10px;
+}
+.game .list .itemWrapper:last-child {
+  padding-bottom: 140px;
+}
+
 .game .list .item {
-  height: 10vh;
+  position: relative;
+  height: 70px;
+  border-radius: 35px;
+
+  margin-left: 20px;
+  margin-right: 20px;
+
+  padding-left: 5px;
+  padding-right: 20px;
+
   background: #eeeeee;
-  margin-left: 8vw;
-  margin-right: 8vw;
-  margin-top: 2vh;
-  border-radius: 5vh;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-left: 2vw;
-  padding-right: 4vw;
+}
+
+.game .list .item .review {
+  position: absolute;
+  left: 80%;
+  top: -8px;
+  font-size: 14px;
 }
 
 .game .list .item .avatar {
-  height: 8vh;
-  width: 8vh;
-  border-radius: 4vh;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
 }
 
 .game .list .item .info {
@@ -117,6 +151,7 @@
 }
 
 .game .list .item .detail view {
+  font-size: 13px;
   width: 100%;
   padding: 4px;
   border-radius: 15px;
@@ -145,21 +180,17 @@
   background-color: rgba(233, 117, 119, 0.15);
 }
 
-.game .list .item:last-child {
-  margin-bottom: 20vh;
-}
-
 .buttonWrapper {
   position: absolute;
   height: 10vh;
   width: 100vw;
   bottom: 0;
-  padding-top: 5vh;
-  padding-bottom: 8vh;
   display: flex;
   justify-content: center;
   align-content: center;
   align-items: center;
+  padding-top: 60px;
+  padding-bottom: 60px;
 }
 
 .buttonWrapper .button {
