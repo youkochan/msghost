@@ -124,11 +124,11 @@ Page({
   },
 
   onEndGame: function() {
-    const itemList = ['人类获胜', '鬼获胜']
+    const itemList = ['人获胜-只有人猜出', '人躺赢-鬼跳鬼失败', '鬼获胜-双方都猜出', '鬼躺赢-双方未猜出', '鬼大胜-只有鬼猜出', '鬼大胜-剩鬼过半数']
     wx.showActionSheet({
       itemList: itemList,
       success: res => {
-        wx.cloud.callFunction({ name: 'endGame', data: { id: this.data.gameid, winner: res.tapIndex } })
+        wx.cloud.callFunction({ name: 'endGame', data: { id: this.data.gameid, winner: res.tapIndex < 2 ? 0 : 1, winnerDetails: res.tapIndex } })
           .catch(err => { wx.showModal({ title: '结束游戏出错', content: err.message, showCancel: false}) })
       }
     })
