@@ -11,6 +11,8 @@
         <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 3 }}">鬼躺赢-双方未猜出</text>
         <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 4 }}">鬼大胜-只有鬼猜出</text>
         <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 5 }}">鬼大胜-剩鬼过半数</text>
+        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === undefined && game.winner === 0 }}">人获胜</text>
+        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === undefined && game.winner === 2 }}">鬼获胜</text>
         <text class="h3" wx:if="{{ game.status === 1 }}">点击查看隐藏内容</text>
         <text class="h3" wx:if="{{ game.status !== 0 }}">多数派-少数派-鬼：{{ game.majority }}-{{ game.minority }}-{{ game.ghost }}</text>
       </view>
