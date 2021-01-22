@@ -1,8 +1,8 @@
 const moveUserActions = [
-  '⏫移到顶部',
+  '🔼移到顶部',
   '⬆️上移一位',
   '⬇️下移一位',
-  '⏬移到底部',
+  '🔽移到底部',
 ]
 
 const markUserActions = [
@@ -19,6 +19,8 @@ const likeUserActions = [
 ]
 
 Page({
+  watchers: [],
+
   data: {
     isShowingHiddenCard: false,
     noteInfo: {},
@@ -30,15 +32,18 @@ Page({
   },
 
   initWatcher: function(gameid) {
+    console.log('[watcher] initWatcher')
     const openid = this.data.openid
     const db = wx.cloud.database()
 
     const onStatusChange = snapshot => {
+      console.log('[watcher] onStatusChange')
       if (snapshot.docs[0]) {
         this.setData({ game: snapshot.docs[0] })
       }
     }
     const onPlayerChange = snapshot => {
+      console.log('[watcher] onPlayerChange')
       const openids = snapshot.docs.map(player => player.openid)
       this.setData({ players: openids })
       
@@ -47,7 +52,7 @@ Page({
           title: '你已被踢出房间',
           content: '点击确定返回主页',
           showCancel: false,
-          success: _ => { wx.redirectTo({ url: '../home/home' }) }
+          success: _ => { wx.reLaunch({ url: '../home/home' }) }
         })
         return
       }
@@ -65,6 +70,7 @@ Page({
       })
     }
     const onReviewChange = snapshot => {
+      console.log('[watcher] onReviewChange')
       var thumbUp = {}
       var thumbDown = {}
       snapshot.docs.forEach(r => {
@@ -75,30 +81,34 @@ Page({
       this.setData({ thumbUp: thumbUp, thumbDown: thumbDown })
     }
     const onNoteChange = snapshot => {
+      console.log('[watcher] onNoteChange')
       if (snapshot.docs[0]) {
         const noteInfo = snapshot.docs[0].noteInfo
         const markInfo = snapshot.docs[0].markInfo
         this.setData({ noteInfo: noteInfo, markInfo: markInfo })
       }
     }
-    const onWatcherError = err => { 
-      console.error(err)
-      wx.showModal({
-        title: '监听数据库失败',
-        content: err.message, showCancel: false,
-        success: _ => { wx.redirectTo({ url: '../home/home' }) }
-      })
+    const onWatcherError = err => {
+      console.error('[watcher] onWatcherError')
+      if (this.watchers.length !== 0) {
+        this.watchers.forEach(w => { w.close() })
+        this.watchers = []
+        wx.showModal({
+          title: '监听数据库失败',
+          content: '点击确定重新连接',
+          showCancel: false,
+          success: _ => { this.initWatcher(gameid) }
+        })
+      }
     }
 
-    [
+    this.watchers = [
       { data: db.collection('ghost').doc(gameid), watcher: onStatusChange },
       { data: db.collection('review').where({ gameid: gameid }), watcher: onReviewChange },
       { data: db.collection('r_user_ghost').where({ gameid: gameid }), watcher: onPlayerChange },
       { data: db.collection('note').where({ gameid: gameid, _openid: openid }), watcher: onNoteChange }
     ]
-    .forEach(task => {
-      task.data.watch({ onChange: task.watcher, onError: onWatcherError })
-    })
+    .map(task => task.data.watch({ onChange: task.watcher, onError: onWatcherError }))
   },
 
   onLoad: function (options) {
@@ -111,9 +121,14 @@ Page({
         wx.showModal({
           title: '加入房间失败',
           content: err.message, showCancel: false,
-          success: _ => { wx.redirectTo({ url: '../home/home' }) }
+          success: _ => { wx.reLaunch({ url: '../home/home' }) }
         })
       })
+  },
+
+  onUnload: function() {
+    console.log('[onUnload] game')
+    this.watchers.forEach(i => i.close())
   },
 
   onStartGame: function() {
@@ -170,10 +185,10 @@ Page({
             const p = this.data.players
             const i = this.data.players.indexOf(tid)
             switch (moveUserActions[tap.tapIndex].substr(0, 2)) {
-              case '⏫': { const t = p.splice(i, 1); p.unshift(t[0]) } break
+              case '🔼': { const t = p.splice(i, 1); p.unshift(t[0]) } break
               case '⬆️': { if (i !== 0) { const t = p[i-1]; p[i-1] = p[i]; p[i] = t } } break
               case '⬇️': { if (i !== p.length - 1) { const t = p[i+1]; p[i+1] = p[i]; p[i] = t } } break
-              case '⏬': { const t = p.splice(i, 1); p.push(t[0]) } break 
+              case '🔽': { const t = p.splice(i, 1); p.push(t[0]) } break
             }
             this.setData({ players: p })
           }
