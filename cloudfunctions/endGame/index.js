@@ -10,6 +10,7 @@ const db = cloud.database()
 exports.main = async (event, context) => {
   const gameid = event.id
   const winner = event.winner
+  const winnerDetails = event.winnerDetails
 
-  return db.collection('ghost').doc(gameid).update({ data: { status: 2, winner: winner } })
+  return db.collection('ghost').doc(gameid).update({ data: { status: 2, winner: winner, winnerDetails: winnerDetails } })
 }

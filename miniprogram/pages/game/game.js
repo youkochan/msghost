@@ -128,7 +128,7 @@ Page({
     wx.showActionSheet({
       itemList: itemList,
       success: res => {
-        wx.cloud.callFunction({ name: 'endGame', data: { id: this.data.gameid, winner: res.tapIndex } })
+        wx.cloud.callFunction({ name: 'endGame', data: { id: this.data.gameid, winner: res.tapIndex < 2 ? 0 : 1, winnerDetails: res.tapIndex } })
           .catch(err => { wx.showModal({ title: '结束游戏出错', content: err.message, showCancel: false}) })
       }
     })

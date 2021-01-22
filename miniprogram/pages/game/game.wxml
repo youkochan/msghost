@@ -5,12 +5,12 @@
         <text class="h2" wx:if="{{ game.status === 0 }}">{{ game.shortcut}} 房间状态：准备中</text>
         <text class="h2" wx:if="{{ game.status === 1 }}">{{ game.shortcut}} 房间状态：进行中</text>
         <text class="h2" wx:if="{{ game.status === 2 }}">{{ game.shortcut}} 房间状态：已结束</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winner === 0 }}">人获胜-只有人猜出</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winner === 1 }}">人躺赢-鬼跳鬼失败</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winner === 2 }}">鬼获胜-双方都猜出</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winner === 3 }}">鬼躺赢-双方未猜出</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winner === 4 }}">鬼大胜-只有鬼猜出</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winner === 5 }}">鬼大胜-剩鬼过半数</text>
+        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 0 }}">人获胜-只有人猜出</text>
+        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 1 }}">人躺赢-鬼跳鬼失败</text>
+        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 2 }}">鬼获胜-双方都猜出</text>
+        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 3 }}">鬼躺赢-双方未猜出</text>
+        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 4 }}">鬼大胜-只有鬼猜出</text>
+        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 5 }}">鬼大胜-剩鬼过半数</text>
         <text class="h3" wx:if="{{ game.status === 1 }}">点击查看隐藏内容</text>
         <text class="h3" wx:if="{{ game.status !== 0 }}">多数派-少数派-鬼：{{ game.majority }}-{{ game.minority }}-{{ game.ghost }}</text>
       </view>
