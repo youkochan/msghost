@@ -23,7 +23,12 @@ exports.main = async (event, context) => {
     if (openids.length < 7) { throw Error('房间人数不足，无法开始游戏') }
 
     var sortedOpenids = openids
-    sortedOpenids.sort(_ => { return .5 - Math.random() })
+    for (let i = sortedOpenids.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      var t = sortedOpenids[i];
+      sortedOpenids[i] = sortedOpenids[j];
+      sortedOpenids[j] = t;
+    }
 
     const l0 = openids.length
     const l1 = Math.floor(l0 / 2)
