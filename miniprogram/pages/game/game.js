@@ -18,6 +18,15 @@ const likeUserActions = [
   '🚫取消评价',
 ]
 
+const gameDetailResults = [
+  '人获胜-只有人猜出',
+  '人躺赢-鬼跳鬼失败',
+  '鬼获胜-双方都猜出',
+  '鬼躺赢-双方未猜出',
+  '鬼大胜-只有鬼猜出',
+  '鬼大胜-剩鬼过半数',
+]
+
 Page({
   watchers: [],
 
@@ -32,7 +41,7 @@ Page({
   },
 
   initWatcher: function(gameid) {
-    console.log('[watcher] initWatcher')
+    wx.showLoading({ title: '连接数据库中' })
     const openid = this.data.openid
     const db = wx.cloud.database()
 
@@ -89,34 +98,54 @@ Page({
       }
     }
     const onWatcherError = err => {
-      console.error('[watcher] onWatcherError')
-      if (this.watchers.length !== 0) {
-        this.watchers.forEach(w => { w.close() })
-        this.watchers = []
-        wx.showModal({
-          title: '监听数据库失败',
-          content: '点击确定重新连接',
-          showCancel: false,
-          success: _ => { this.initWatcher(gameid) }
-        })
-      }
+      console.error('onWatcherError', err)
+      wx.hideLoading()
+      this.watchers.forEach(w => { w.close() })
+      this.watchers = []
+      wx.showModal({
+        title: '监听数据库失败',
+        content: '点击确定重新连接',
+        showCancel: false,
+        success: _ => { this.initWatcher(gameid) }
+      })
     }
 
-    this.watchers = [
+    const tasks = [
       { data: db.collection('ghost').doc(gameid), watcher: onStatusChange },
       { data: db.collection('review').where({ gameid: gameid }), watcher: onReviewChange },
       { data: db.collection('r_user_ghost').where({ gameid: gameid }), watcher: onPlayerChange },
-      { data: db.collection('note').where({ gameid: gameid, _openid: openid }), watcher: onNoteChange }
+      { data: db.collection('note').where({ gameid: gameid, _openid: openid }), watcher: onNoteChange },
     ]
-    .map(task => task.data.watch({ onChange: task.watcher, onError: onWatcherError }))
+
+    this.watchers = []
+
+    const convert = task => {
+      return new Promise((resolve, reject) => {
+        this.watchers.push(task.data.watch({
+          onChange: snapshot => { task.watcher(snapshot); resolve() },
+          onError: onWatcherError
+        }))
+      })
+    }
+
+    const ps = tasks.map(task => convert(task))
+    const pa = Promise.all(ps)
+    const pt = new Promise((resolve, reject) => { setTimeout(() => { reject(Error()) }, 5000) })
+
+    Promise.race([pa, pt])
+      .then(_ => { wx.showToast({ title: '加载完成' }) })
+      .catch(err => { onWatcherError(err) })
   },
 
   onLoad: function (options) {
-    wx.cloud.callFunction({ name: 'joinRoomV2', data: { id: options.id } })
+    Promise.resolve()
+      .then(_ => { wx.showLoading({ title: '加载房间中' }) })
+      .then(_ => wx.cloud.callFunction({ name: 'joinRoomV2', data: { id: options.id } }))
       .then(res => res.result)
       .then(result => { if (result.error) { throw Error(result.error) } return result })
       .then(result => { this.setData({ openid: result.openid, gameid: result.gameid }); return result.gameid })
-      .then(gameid => {  this.initWatcher(gameid) })
+      .then(gameid => { wx.hideLoading(); return gameid })
+      .then(gameid => { this.initWatcher(gameid) })
       .catch(err => { 
         wx.showModal({
           title: '加入房间失败',
@@ -127,7 +156,6 @@ Page({
   },
 
   onUnload: function() {
-    console.log('[onUnload] game')
     this.watchers.forEach(i => i.close())
   },
 
@@ -139,12 +167,18 @@ Page({
   },
 
   onEndGame: function() {
-    const itemList = ['人获胜-只有人猜出', '人躺赢-鬼跳鬼失败', '鬼获胜-双方都猜出', '鬼躺赢-双方未猜出', '鬼大胜-只有鬼猜出', '鬼大胜-剩鬼过半数']
     wx.showActionSheet({
-      itemList: itemList,
+      itemList: gameDetailResults,
       success: res => {
-        wx.cloud.callFunction({ name: 'endGame', data: { id: this.data.gameid, winner: res.tapIndex < 2 ? 0 : 1, winnerDetails: res.tapIndex } })
-          .catch(err => { wx.showModal({ title: '结束游戏出错', content: err.message, showCancel: false}) })
+        wx.cloud.callFunction({
+          name: 'endGame',
+          data: {
+            id: this.data.gameid,
+            winner: res.tapIndex < 2 ? 0 : 1,
+            winnerDetails: res.tapIndex
+          }
+        })
+        .catch(err => { wx.showModal({ title: '结束游戏出错', content: err.message, showCancel: false}) })
       }
     })
   },
