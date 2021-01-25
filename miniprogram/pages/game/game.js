@@ -100,14 +100,16 @@ Page({
     const onWatcherError = err => {
       console.error('onWatcherError', err)
       wx.hideLoading()
-      this.watchers.forEach(w => { w.close() })
-      this.watchers = []
-      wx.showModal({
-        title: '监听数据库失败',
-        content: '点击确定重新连接',
-        showCancel: false,
-        success: _ => { this.initWatcher(gameid) }
-      })
+      if (this.watchers.length) {
+        this.watchers.forEach(w => { w.close() })
+        this.watchers = []
+        wx.showModal({
+          title: '监听数据库失败',
+          content: '点击确定重新连接',
+          showCancel: false,
+          success: _ => { this.initWatcher(gameid) }
+        })
+      }
     }
 
     const tasks = [
