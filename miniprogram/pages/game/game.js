@@ -132,7 +132,7 @@ Page({
 
     const ps = tasks.map(task => convert(task))
     const pa = Promise.all(ps)
-    const pt = new Promise((resolve, reject) => { setTimeout(() => { reject(Error()) }, 5000) })
+    const pt = new Promise((resolve, reject) => { setTimeout(() => { reject(Error()) }, 10000) })
 
     Promise.race([pa, pt])
       .then(_ => { wx.showToast({ title: '加载完成' }) })
