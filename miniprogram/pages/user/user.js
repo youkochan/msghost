@@ -17,13 +17,13 @@ Page({
           data: [
             [
               { text: '总游戏次数', number: data.totalCount },
-              { text: '胜利次数', number: totalWinCount },
+              { text: '胜利次数', number: data.winAsGhostCount + data.winAsPlayerCount },
               { text: '失败次数', number: data.loseAsGhostCount + data.loseAsPlayerCount },
             ],
             [
               { text: '裁判次数', number: data.playAsHostCount },
               { text: '人类次数', number: data.playAsPlayerCount },
-              { text: '鬼次数', number: data.playAsPlayerCount },
+              { text: '鬼次数', number: data.playAsGhostCount },
             ],
             [
               { text: '总胜率', number: (totalWinCount / totalCount).toFixed(2) },
