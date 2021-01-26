@@ -31,7 +31,11 @@
   <scroll-view class="list" scroll-y="true">
     <view class="itemWrapper" wx:key="*this" wx:if="{{ userInfo[item] }}" wx:for="{{ players }}">
       <view class="item">
-        <image class="avatar" mode="aspectFill" src="{{ userInfo[item].avatarUrl }}" />
+        <image class="avatar" mode="aspectFill"
+          src="{{ userInfo[item].avatarUrl }}"
+          catchtap="onAvatarTap"
+          data-openid="{{ item }}"
+        />
 
         <view class="info" wx:if="{{ game.status === 0 }}" catchtap="onUserTap" data-openid="{{ item }}">
           <text class="nickname">{{ userInfo[item].nickName }}</text>

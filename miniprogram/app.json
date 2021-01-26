@@ -1,7 +1,8 @@
 {
   "pages": [
     "pages/home/home",
-    "pages/game/game"
+    "pages/game/game",
+    "pages/user/user"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

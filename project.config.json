@@ -64,6 +64,12 @@
           "pathName": "pages/game/game",
           "query": "id=ce805e785ff7f2e903b0354d06c203eb",
           "scene": 1000
+        },
+        {
+          "name": "user_test",
+          "pathName": "pages/user/user",
+          "query": "openid=oNwX-4jLtneJ26R0cAE7Hy2QXxr8",
+          "scene": null
         }
       ]
     }

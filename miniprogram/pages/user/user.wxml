@@ -1,0 +1,12 @@
+<view class="container" wx:if="{{ data }}">
+  <image class="avatar" mode="aspectFill" src="{{ userInfo.avatarUrl }}" />
+  <text class="name">{{ userInfo.nickName }}</text>
+  <view class="row" wx:for="{{ data }}" wx:key="*this" wx:for-item="row">
+    <view class="cell" wx:for="{{ row }}" wx:key="*this" wx:for-item="cell">
+      <view class="wrapper">
+        <text>{{ cell.text }}</text>
+        <text>{{ cell.number }}</text>
+      </view>
+    </view>
+  </view>
+</view>

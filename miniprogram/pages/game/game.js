@@ -149,6 +149,7 @@ Page({
       .then(gameid => { wx.hideLoading(); return gameid })
       .then(gameid => { this.initWatcher(gameid) })
       .catch(err => { 
+        wx.hideLoading()
         wx.showModal({
           title: '加入房间失败',
           content: err.message, showCancel: false,
@@ -183,6 +184,11 @@ Page({
         .catch(err => { wx.showModal({ title: '结束游戏出错', content: err.message, showCancel: false}) })
       }
     })
+  },
+
+  onAvatarTap: function(p) {
+    const tid = p.currentTarget.dataset.openid
+    wx.navigateTo({ url: '../user/user?openid=' + tid })
   },
 
   onUserTap: function(p) {
