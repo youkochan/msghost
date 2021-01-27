@@ -1,84 +1,85 @@
-<view class="game" wx:if="{{ game }}">
-  <view class="title {{ isShowingHiddenCard ? 'flipped' : '' }}" catchtap="onCardTap">
-    <view class="card">
-      <view class="textWrapper">
-        <text class="h2" wx:if="{{ game.status === 0 }}">{{ game.shortcut}} 房间状态：准备中</text>
-        <text class="h2" wx:if="{{ game.status === 1 }}">{{ game.shortcut}} 房间状态：进行中</text>
-        <text class="h2" wx:if="{{ game.status === 2 }}">{{ game.shortcut}} 房间状态：已结束</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 0 }}">人获胜-只有人猜出</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 1 }}">人躺赢-鬼跳鬼失败</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 2 }}">鬼获胜-双方都猜出</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 3 }}">鬼躺赢-双方未猜出</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 4 }}">鬼大胜-只有鬼猜出</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 5 }}">鬼大胜-剩鬼过半数</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === undefined && game.winner === 0 }}">人获胜</text>
-        <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === undefined && game.winner === 1 }}">鬼获胜</text>
-        <text class="h3" wx:if="{{ game.status === 1 }}">点击查看隐藏内容</text>
-        <text class="h3" wx:if="{{ game.status !== 0 }}">多数派-少数派-鬼：{{ game.majority }}-{{ game.minority }}-{{ game.ghost }}</text>
+<component-auth bindAuthReady="onAuthReady">
+  <view class="game" wx:if="{{ game }}">
+    <view class="title {{ isShowingHiddenCard ? 'flipped' : '' }}" catchtap="onCardTap">
+      <view class="card">
+        <view class="textWrapper">
+          <text class="h2" wx:if="{{ game.status === 0 }}">{{ game.shortcut}} 房间状态：准备中</text>
+          <text class="h2" wx:if="{{ game.status === 1 }}">{{ game.shortcut}} 房间状态：进行中</text>
+          <text class="h2" wx:if="{{ game.status === 2 }}">{{ game.shortcut}} 房间状态：已结束</text>
+          <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 0 }}">人获胜-只有人猜出</text>
+          <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 1 }}">人躺赢-鬼跳鬼失败</text>
+          <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 2 }}">鬼获胜-双方都猜出</text>
+          <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 3 }}">鬼躺赢-双方未猜出</text>
+          <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 4 }}">鬼大胜-只有鬼猜出</text>
+          <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 5 }}">鬼大胜-剩鬼过半数</text>
+          <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === undefined && game.winner === 0 }}">人获胜</text>
+          <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === undefined && game.winner === 1 }}">鬼获胜</text>
+          <text class="h3" wx:if="{{ game.status === 1 }}">点击查看隐藏内容</text>
+          <text class="h3" wx:if="{{ game.status !== 0 }}">多数派-少数派-鬼：{{ game.majority }}-{{ game.minority }}-{{ game.ghost }}</text>
+        </view>
+      </view>
+      <view class="card back">
+        <view class="textWrapper">
+          <text class="h2" wx:if="{{ openid && roleInfo[openid] === 0 }}">多数派词语：「{{ game.majorityWord }}」</text>
+          <text class="h2" wx:if="{{ openid && roleInfo[openid] === 0 }}">少数派词语：「{{ game.minorityWord }}」</text>
+          <text class="h1" wx:if="{{ openid && roleInfo[openid] === 1 }}">你的词是：「{{ game.majorityWord }}」</text>
+          <text class="h1" wx:if="{{ openid && roleInfo[openid] === 2 }}">你的词是：「{{ game.minorityWord }}」</text>
+          <text class="h1" wx:if="{{ openid && roleInfo[openid] === 3 }}">你的词是：「{{ game.minorityWord.length }}个字」</text>
+          <text class="h3" wx:if="{{ openid && game.status === 1 }}">点击隐藏</text>
+        </view>
       </view>
     </view>
-    <view class="card back">
-      <view class="textWrapper">
-        <text class="h2" wx:if="{{ openid && roleInfo[openid] === 0 }}">多数派词语：「{{ game.majorityWord }}」</text>
-        <text class="h2" wx:if="{{ openid && roleInfo[openid] === 0 }}">少数派词语：「{{ game.minorityWord }}」</text>
-        <text class="h1" wx:if="{{ openid && roleInfo[openid] === 1 }}">你的词是：「{{ game.majorityWord }}」</text>
-        <text class="h1" wx:if="{{ openid && roleInfo[openid] === 2 }}">你的词是：「{{ game.minorityWord }}」</text>
-        <text class="h1" wx:if="{{ openid && roleInfo[openid] === 3 }}">你的词是：「{{ game.minorityWord.length }}个字」</text>
-        <text class="h3" wx:if="{{ openid && game.status === 1 }}">点击隐藏</text>
+    <scroll-view class="list" scroll-y="true">
+      <view class="itemWrapper" wx:key="*this" wx:if="{{ userInfo[item] }}" wx:for="{{ players }}">
+        <view class="item">
+          <image class="avatar" mode="aspectFill"
+            src="{{ userInfo[item].avatarUrl }}"
+            catchtap="onAvatarTap"
+            data-openid="{{ item }}"
+          />
+
+          <view class="info" wx:if="{{ game.status === 0 }}" catchtap="onUserTap" data-openid="{{ item }}">
+            <text class="nickname">{{ userInfo[item].nickName }}</text>
+          </view>
+
+          <view class="info" wx:if="{{ game.status === 1 }}" catchtap="onUserTap" data-openid="{{ item }}">
+            <text class="nickname">{{ userInfo[item].nickName }}</text>
+            <text class="note" wx:if="{{ noteInfo[item] && targetOpenid !== item }}">“{{ noteInfo[item] }}”</text>
+            <input class="note" wx:if="{{ targetOpenid === item }}"
+              focus="{{ targetOpenid === item }}"
+              value="{{ noteInfo[item] }}"
+              bindblur="onInputBlur">
+            </input>
+          </view>
+
+          <view class="info" wx:if="{{ game.status === 2 }}" catchtap="onUserTap" data-openid="{{ item }}">
+            <text class="nickname">{{ userInfo[item].nickName }}</text>
+            <text class="note" wx:if="{{ roleInfo[item] === 1 }}">「{{ game.majorityWord }}」</text>
+            <text class="note" wx:if="{{ roleInfo[item] === 2 }}">「{{ game.minorityWord }}」</text>
+            <text class="note" wx:if="{{ roleInfo[item] === 3 }}">鬼</text>
+          </view>
+
+          <view wx:if="{{ roleInfo[openid] === 0 || roleInfo[item] === 0 || game.status === 2 }}" class="detail">
+            <view class="c0" wx:if="{{ roleInfo[item] === 0 }}">裁判</view>
+            <view class="c1" wx:if="{{ roleInfo[item] === 1 }}">多数派</view>
+            <view class="c2" wx:if="{{ roleInfo[item] === 2 }}">少数派</view>
+            <view class="c3" wx:if="{{ roleInfo[item] === 3 }}">鬼</view>
+          </view>
+          <view wx:elif="{{ game.status === 1 && markInfo[item] }}" class="detail">
+            <view class="c1" wx:if="{{ markInfo[item] === 1 }}">多数派?</view>
+            <view class="c2" wx:if="{{ markInfo[item] === 2 }}">少数派?</view>
+            <view class="c3" wx:if="{{ markInfo[item] === 3 }}">鬼?</view>
+          </view>
+
+          <view class="review">
+            {{  (thumbUp[item] ? '👍' + thumbUp[item] : '') + ' '  + (thumbDown[item] ? '👎' + thumbDown[item] : '') }}
+          </view>
+        </view>
       </view>
-    </view>
+    </scroll-view>
   </view>
-  <scroll-view class="list" scroll-y="true">
-    <view class="itemWrapper" wx:key="*this" wx:if="{{ userInfo[item] }}" wx:for="{{ players }}">
-      <view class="item">
-        <image class="avatar" mode="aspectFill"
-          src="{{ userInfo[item].avatarUrl }}"
-          catchtap="onAvatarTap"
-          data-openid="{{ item }}"
-        />
-
-        <view class="info" wx:if="{{ game.status === 0 }}" catchtap="onUserTap" data-openid="{{ item }}">
-          <text class="nickname">{{ userInfo[item].nickName }}</text>
-        </view>
-
-        <view class="info" wx:if="{{ game.status === 1 }}" catchtap="onUserTap" data-openid="{{ item }}">
-          <text class="nickname">{{ userInfo[item].nickName }}</text>
-          <text class="note" wx:if="{{ noteInfo[item] && targetOpenid !== item }}">“{{ noteInfo[item] }}”</text>
-          <input class="note" wx:if="{{ targetOpenid === item }}"
-            focus="{{ targetOpenid === item }}"
-            value="{{ noteInfo[item] }}"
-            bindblur="onInputBlur">
-          </input>
-        </view>
-
-        <view class="info" wx:if="{{ game.status === 2 }}" catchtap="onUserTap" data-openid="{{ item }}">
-          <text class="nickname">{{ userInfo[item].nickName }}</text>
-          <text class="note" wx:if="{{ roleInfo[item] === 1 }}">「{{ game.majorityWord }}」</text>
-          <text class="note" wx:if="{{ roleInfo[item] === 2 }}">「{{ game.minorityWord }}」</text>
-          <text class="note" wx:if="{{ roleInfo[item] === 3 }}">鬼</text>
-        </view>
-        
-        <view wx:if="{{ roleInfo[openid] === 0 || roleInfo[item] === 0 || game.status === 2 }}" class="detail">
-          <view class="c0" wx:if="{{ roleInfo[item] === 0 }}">裁判</view>
-          <view class="c1" wx:if="{{ roleInfo[item] === 1 }}">多数派</view>
-          <view class="c2" wx:if="{{ roleInfo[item] === 2 }}">少数派</view>
-          <view class="c3" wx:if="{{ roleInfo[item] === 3 }}">鬼</view>
-        </view>
-        <view wx:elif="{{ game.status === 1 && markInfo[item] }}" class="detail">
-          <view class="c1" wx:if="{{ markInfo[item] === 1 }}">多数派?</view>
-          <view class="c2" wx:if="{{ markInfo[item] === 2 }}">少数派?</view>
-          <view class="c3" wx:if="{{ markInfo[item] === 3 }}">鬼?</view>
-        </view>
-
-        <view class="review">
-          {{  (thumbUp[item] ? '👍' + thumbUp[item] : '') + ' '  + (thumbDown[item] ? '👎' + thumbDown[item] : '') }}
-        </view>
-      </view>
-    </view>
-  </scroll-view>
-</view>
-
-<view class="buttonWrapper" wx:if="{{ game && roleInfo[openid] === 0 }}">
-  <button wx:if="{{ game.status === 0 }}" class="button" catchtap="onStartGame">开始捉鬼</button>
-  <button wx:if="{{ game.status === 1 }}" class="button" catchtap="onEndGame">结束捉鬼</button>
-</view>
+  <view class="buttonWrapper" wx:if="{{ game && roleInfo[openid] === 0 }}">
+    <button wx:if="{{ game.status === 0 }}" class="button" catchtap="onStartGame">开始捉鬼</button>
+    <button wx:if="{{ game.status === 1 }}" class="button" catchtap="onEndGame">结束捉鬼</button>
+  </view>
+</component-auth>

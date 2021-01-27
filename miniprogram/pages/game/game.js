@@ -40,6 +40,25 @@ Page({
     targetOpenid: '',
   },
 
+  onAuthReady: function() {
+    Promise.resolve()
+      .then(_ => { wx.showLoading({ title: '加载房间中' }) })
+      .then(_ => wx.cloud.callFunction({ name: 'joinRoomV2', data: { id: this.data.gameid } }))
+      .then(res => res.result)
+      .then(result => { if (result.error) { throw Error(result.error) } return result })
+      .then(result => { this.setData({ openid: result.openid, gameid: result.gameid }); return result.gameid })
+      .then(gameid => { wx.hideLoading(); return gameid })
+      .then(gameid => { this.initWatcher(gameid) })
+      .catch(err => {
+        wx.hideLoading()
+        wx.showModal({
+          title: '加入房间失败',
+          content: err.message, showCancel: false,
+          success: _ => { wx.reLaunch({ url: '../home/home' }) }
+        })
+      })
+  },
+
   initWatcher: function(gameid) {
     wx.showLoading({ title: '连接数据库中' })
     const openid = this.data.openid
@@ -140,22 +159,7 @@ Page({
   },
 
   onLoad: function (options) {
-    Promise.resolve()
-      .then(_ => { wx.showLoading({ title: '加载房间中' }) })
-      .then(_ => wx.cloud.callFunction({ name: 'joinRoomV2', data: { id: options.id } }))
-      .then(res => res.result)
-      .then(result => { if (result.error) { throw Error(result.error) } return result })
-      .then(result => { this.setData({ openid: result.openid, gameid: result.gameid }); return result.gameid })
-      .then(gameid => { wx.hideLoading(); return gameid })
-      .then(gameid => { this.initWatcher(gameid) })
-      .catch(err => { 
-        wx.hideLoading()
-        wx.showModal({
-          title: '加入房间失败',
-          content: err.message, showCancel: false,
-          success: _ => { wx.reLaunch({ url: '../home/home' }) }
-        })
-      })
+    this.setData({ gameid: options.id })
   },
 
   onUnload: function() {
@@ -330,4 +334,6 @@ Page({
     this.setData({ markInfo: markInfo })
     this.updateCloudNote()
   },
+
+  onShareAppMessage: function () {}
 })

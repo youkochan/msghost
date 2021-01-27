@@ -1,0 +1,8 @@
+<view wx:if="{{ !authorized }}" class="wrapper">
+  <text class="h1">捉鬼助手请求授权</text>
+  <text class="h2">捉鬼助手需要您的信息（昵称、头像等）来展示游戏进度、游戏结果等</text>
+  <button bindgetuserinfo="onGetUserInfo" open-type="getUserInfo">
+    <text>确认授权</text>
+  </button>
+</view>
+<slot wx:else></slot>
