@@ -1,8 +1,8 @@
 new Page({
   data: {},
 
-  onLoad: function(options) {
-    const openid = options.openid;
+  onAuthReady: function() {
+    const openid = this.data.openid;
     wx.cloud.callFunction({name: 'getUserInfo', data: {openid: openid}})
         .then((res) => {
           wx.showToast({title: '加载完成'});
@@ -46,6 +46,10 @@ new Page({
           console.error(err);
           wx.showToast({title: '加载失败'});
         });
+  },
+
+  onLoad: function(options) {
+    this.setData({openid: options.openid});
   },
 
   onShareAppMessage: function() {},

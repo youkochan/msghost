@@ -1,4 +1,4 @@
-<component-auth>
+<component-auth bindAuthReady="onAuthReady">
   <view class="container" wx:if="{{ data }}">
     <image class="avatar" mode="aspectFill" src="{{ userInfo.avatarUrl }}" />
     <text class="name">{{ userInfo.nickName }}</text>
