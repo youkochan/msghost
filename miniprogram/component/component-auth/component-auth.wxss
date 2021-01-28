@@ -13,24 +13,23 @@
   justify-content: center;
 }
 
-.wrapper text {
+.wrapper .h1 {
   width: 80%;
   text-align: center; 
-}
-
-.wrapper .h1 {
   font-size: 26px;
   font-weight: bold;
   margin-bottom: 20px;
 }
 
 .wrapper .h2 {
+  width: 80%;
+  text-align: center; 
   font-size: 16px;
   color: #999;
   margin-bottom: 20px;
 }
 
-.wrapper button {
+.wrapper .btn {
   margin-top: 30px;
   padding: 0;
   background-color: rgb(45, 194, 0);
