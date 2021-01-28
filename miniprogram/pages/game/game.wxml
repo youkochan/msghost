@@ -1,6 +1,16 @@
 <component-auth bindAuthReady="onAuthReady">
   <view class="game" wx:if="{{ game }}">
     <view class="title {{ isShowingHiddenCard ? 'flipped' : '' }}" catchtap="onCardTap">
+      <view class="card back">
+        <view class="textWrapper">
+          <text class="h2" wx:if="{{ isShowingHiddenCard && openid && roleInfo[openid] === 0 }}">多数派词语：「{{ game.majorityWord }}」</text>
+          <text class="h2" wx:if="{{ isShowingHiddenCard && openid && roleInfo[openid] === 0 }}">少数派词语：「{{ game.minorityWord }}」</text>
+          <text class="h1" wx:if="{{ isShowingHiddenCard && openid && roleInfo[openid] === 1 }}">你的词是：「{{ game.majorityWord }}」</text>
+          <text class="h1" wx:if="{{ isShowingHiddenCard && openid && roleInfo[openid] === 2 }}">你的词是：「{{ game.minorityWord }}」</text>
+          <text class="h1" wx:if="{{ isShowingHiddenCard && openid && roleInfo[openid] === 3 }}">你的词是：「{{ game.minorityWord.length }}个字」</text>
+          <text class="h3" wx:if="{{ isShowingHiddenCard &&openid && game.status === 1 }}">点击隐藏</text>
+        </view>
+      </view>
       <view class="card">
         <view class="textWrapper">
           <text class="h2" wx:if="{{ game.status === 0 }}">{{ game.shortcut}} 房间状态：准备中</text>
@@ -16,16 +26,6 @@
           <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === undefined && game.winner === 1 }}">鬼获胜</text>
           <text class="h3" wx:if="{{ game.status === 1 }}">点击查看隐藏内容</text>
           <text class="h3" wx:if="{{ game.status !== 0 }}">多数派-少数派-鬼：{{ game.majority }}-{{ game.minority }}-{{ game.ghost }}</text>
-        </view>
-      </view>
-      <view class="card back">
-        <view class="textWrapper">
-          <text class="h2" wx:if="{{ openid && roleInfo[openid] === 0 }}">多数派词语：「{{ game.majorityWord }}」</text>
-          <text class="h2" wx:if="{{ openid && roleInfo[openid] === 0 }}">少数派词语：「{{ game.minorityWord }}」</text>
-          <text class="h1" wx:if="{{ openid && roleInfo[openid] === 1 }}">你的词是：「{{ game.majorityWord }}」</text>
-          <text class="h1" wx:if="{{ openid && roleInfo[openid] === 2 }}">你的词是：「{{ game.minorityWord }}」</text>
-          <text class="h1" wx:if="{{ openid && roleInfo[openid] === 3 }}">你的词是：「{{ game.minorityWord.length }}个字」</text>
-          <text class="h3" wx:if="{{ openid && game.status === 1 }}">点击隐藏</text>
         </view>
       </view>
     </view>
