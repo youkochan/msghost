@@ -42,8 +42,7 @@ new Page({
 
   onAuthReady: function() {
     Promise.resolve()
-        .then((_) => {
-          wx.showLoading({title: '加载房间中'});
+        .then((_) => {wx.showLoading({title: '加载房间中'})
         })
         .then((_) => wx.cloud.callFunction({
           name: 'joinRoomV2', data: {id: this.data.gameid},
