@@ -40,7 +40,7 @@ exports.main = async (event, context) => {
         review: $.filter({
           input: '$review',
           as: 'item',
-          cond: $.eq(['$$item.targetOpenid', 'oNwX-4jLtneJ26R0cAE7Hy2QXxr8'])}),
+          cond: $.eq(['$$item.targetOpenid', openid])}),
       })
       .project({
         role: '$role',
