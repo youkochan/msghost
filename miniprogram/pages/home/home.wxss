@@ -28,12 +28,30 @@
 .homeButton {
   margin-top: 5vh;
   padding: 0;
-  background-color: #333333;
   height: 10vh;
   line-height: 10vh;
   border-radius: 5vh;
-  color: #ffffff;
-  box-shadow: 0px 5px 10px #333333;
+  color: #fff;
+  background-size: 300% 100%; 
+}
+
+.homeButton.normal {
+  background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376);
+  box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.75);
+}
+
+.homeButton.reward {
+  background-image: linear-gradient(to right, #25aae1, #40e495, #30dd8a, #2bb673);
+  box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
+}
+
+.homeButton.cancel {
+  background-image: linear-gradient(to right, #eb3941, #f15e64, #e14e53, #e2373f);  box-shadow: 0 5px 15px rgba(242, 97, 103, .4);
+}
+
+.homeButton.confirm {
+  background-image: linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed);
+  box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
 }
 
 .homeButton text {
@@ -42,6 +60,8 @@
 }
 
 .actionCard {
+  box-sizing: border-box;
+  padding: 5vh;
   display: flex;
   align-items: center;
   justify-content: center;

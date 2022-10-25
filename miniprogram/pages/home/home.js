@@ -3,6 +3,15 @@ new Page({
     game: {},
     isPresentingJoinCard: false,
     isPresentingCreatingCard: false,
+    isPresentingRewardCard: false,
+  },
+
+  onRewardTap: function() {
+    this.setData({
+      'isPresentingRewardCard': true,
+      'isPresentingJoinCard': false,
+      'isPresentingCreatingCard': false
+    })
   },
 
   onCreateTap: function() {
@@ -58,6 +67,14 @@ new Page({
         .then((r) => r.result._id)
         .then((g) => this.goToGame(g))
         .catch((e) => this.handleCreateRoomError(e));
+  },
+
+  onRewardFinish: function() {
+    this.setData({
+      'isPresentingCreatingCard': false,
+      'isPresentingRewardCard': false,
+      'isPresentingJoinCard': false
+    })
   },
 
   // Join check

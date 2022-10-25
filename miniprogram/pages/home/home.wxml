@@ -1,7 +1,8 @@
 <view class="main">
-  <view class="container {{ isPresentingCreatingCard || isPresentingJoinCard ? 'blur' : '' }}" bindtap="onCancelTap" >
-    <button class="homeButton" catchtap="onJoinTap"><text>加入捉鬼</text></button>
-    <button class="homeButton" catchtap="onCreateTap"><text>创建捉鬼</text></button>
+  <view class="container {{ isPresentingCreatingCard || isPresentingJoinCard || isPresentingRewardCard? 'blur' : '' }}" bindtap="onCancelTap" >
+    <button class="homeButton normal" catchtap="onJoinTap"><text>加入捉鬼</text></button>
+    <button class="homeButton normal" catchtap="onCreateTap"><text>创建捉鬼</text></button>
+    <button class="homeButton reward" catchtap="onRewardTap"><text>用爱发电</text></button>
   </view>
 
   <view class="actionCard {{ isPresentingCreatingCard ? 'presenting' : '' }}">
@@ -17,7 +18,7 @@
       </view>
     </view>
 
-    <button class="homeButton" catchtap="onCreateFinish"><text>创建完成</text></button>  
+    <button class="homeButton confirm" catchtap="onCreateFinish"><text>创建完成</text></button>  
   </view>
 
   <view class="actionCard {{ isPresentingJoinCard ? 'presenting' : '' }}">
@@ -26,6 +27,11 @@
         <input type="text" confirm-type="done" value="{{ targetRoomid }}" bindblur="onTargetRoomUpdated" placeholder="房间号" />
       </view>
     </view>
-    <button class="homeButton" catchtap="onJoinFinish"><text>确定</text></button>  
+    <button class="homeButton confirm" catchtap="onJoinFinish"><text>确定</text></button>  
+  </view>
+
+  <view class="actionCard {{ isPresentingRewardCard ? 'presenting' : '' }}">
+    <image class="reward" mode="aspectFit" src="../image/reward.jpg" ></image>
+    <button class="homeButton confirm" catchtap="onRewardFinish"><text>关闭</text></button>  
   </view>
 </view>
