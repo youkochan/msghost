@@ -26,6 +26,7 @@ new Page({
     this.setData({
       isPresentingJoinCard: false,
       isPresentingCreatingCard: false,
+      isPresentingRewardCard: false,
     });
   },
 
@@ -82,7 +83,7 @@ new Page({
     if (roomid) {
       return roomid;
     } else {
-      reject(Error('房间号为空'));
+      throw Error('房间号为空');
     }
   },
 
@@ -108,7 +109,7 @@ new Page({
     if (game) {
       return game;
     } else {
-      reject(Error('游戏数据为空'));
+      throw Error('游戏数据为空');
     }
   },
 
