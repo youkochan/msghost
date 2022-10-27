@@ -6,6 +6,12 @@ new Page({
     isPresentingRewardCard: false,
   },
 
+  onClearCacheTap: function() {
+    wx.clearStorage({
+      success: (res) => {},
+    })
+  },
+
   onRewardTap: function() {
     this.setData({
       'isPresentingRewardCard': true,

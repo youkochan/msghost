@@ -1,4 +1,5 @@
 .game {
+  position: absolute;
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -37,9 +38,10 @@
 }
 
 .game .title .card .textWrapper {
-  background-color: #42a895;
+  background-size: 300% 100%;
+  background-image: linear-gradient(to right, #25aae1, #40e495, #30dd8a, #2bb673);
+  box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
   margin: 10px 20px;
-  box-shadow: 0px 5px 10px #999999;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -48,7 +50,8 @@
   border-radius: 10px;
 }
 .game .title .card.back .textWrapper {
-  background-color: #e97577;
+  background-image: linear-gradient(to right, #fc6076, #ff9a44, #ef9d43, #e75516);
+  box-shadow: 0 4px 15px 0 rgba(252, 104, 110, 0.75);
 }
 
 .game .title .card .textWrapper text {
@@ -103,6 +106,12 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.game .list .item.voted {
+  background-size: 300% 100%;
+  background-image: linear-gradient(to right, #0ba360, #3cba92, #30dd8a, #2bb673);
+  box-shadow: 0 4px 15px 0 rgba(23, 168, 108, 0.75);
 }
 
 .game .list .item .review {
@@ -198,6 +207,104 @@
   line-height: 60px;
   border-radius: 30px;
   color: #ffffff;
-  background-color: #333333;
+  background-size: 300% 100%;
+  background-image: linear-gradient(to right, #29323c, #485563);
+  box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.75);
+}
+
+.actionCard {
+  box-sizing: border-box;
+  padding-top: 20px;
+  padding-bottom: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   box-shadow: 0px 5px 10px #333333;
+  border-top-left-radius: 5vh;
+  border-top-right-radius: 5vh;
+  opacity: 0;
+  top: 100%;
+  bottom: 100%;
+  position: absolute;
+  height: 75%;
+  width: 100%;
+  background-color: white;
+  transition: all .3s;
+}
+
+.actionCard.presenting {
+  top: 25%;
+  opacity: 1;
+}
+
+.voteList {
+  width: 100%;
+  height: 1rpx;
+  background: white;
+  flex: 1;
+  padding-bottom: 140px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #222222;
+}
+
+.voteContainer {
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+.voteTitle {
+  font-size: 18px;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.voteRecord {
+  margin-left: 20px;
+  margin-right: 20px;
+  background-color: #eeeeee;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  border-radius: 35px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.voteContent {
+  flex: 1;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.voteAvatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+}
+
+.voteTargetContainer {
+  display: inline;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.voteSourceContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.voteAvatarSource {
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
 }

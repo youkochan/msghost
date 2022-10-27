@@ -14,7 +14,8 @@
       <view class="card">
         <view class="textWrapper">
           <text class="h2" wx:if="{{ game.status === 0 }}">{{ game.shortcut}} 房间状态：准备中</text>
-          <text class="h2" wx:if="{{ game.status === 1 }}">{{ game.shortcut}} 房间状态：进行中</text>
+          <text class="h2" wx:if="{{ game.status === 1 && game.currentVote === undefined}}">{{ game.shortcut}} 房间状态：进行中</text>
+          <text class="h2" wx:if="{{ game.status === 1 && game.currentVote !== undefined}}">{{ game.shortcut}} 房间状态：投票中</text>
           <text class="h2" wx:if="{{ game.status === 2 }}">{{ game.shortcut}} 房间状态：已结束</text>
           <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 0 }}">人获胜-只有人猜出</text>
           <text class="h1" wx:if="{{ game.status === 2 && game.winnerDetails === 1 }}">人躺赢-鬼跳鬼失败</text>
@@ -31,7 +32,7 @@
     </view>
     <scroll-view class="list" scroll-y="true">
       <view class="itemWrapper" wx:key="*this" wx:if="{{ userInfo[item] }}" wx:for="{{ players }}">
-        <view class="item">
+        <view class="item {{ game && game.status === 1 && game.currentVote[item] !== undefined ? 'voted' : '' }}">
           <image class="avatar" mode="aspectFill"
             src="{{ userInfo[item].avatarUrl }}"
             catchtap="onAvatarTap"
@@ -77,9 +78,33 @@
         </view>
       </view>
     </scroll-view>
+    <view class="actionCard {{ isReviewingVote ? 'presenting' : '' }}">
+      <scroll-view class="voteList" scroll-y="true">
+        <view class="voteContainer" wx:key="*this" wx:for-item="vote" wx:for="{{ game.votes }}">
+          <text class="voteTitle">第{{ game.votes.length - index }}轮投票结果</text>
+          <view class="voteRecord"  wx:key="*this" wx:for-item="record" wx:for="{{ vote }}">
+            <image class="voteAvatar" mode="aspectFill" role="img" src="{{ userInfo[record.targetId].avatarUrl }}" />
+            <view class="voteContent">
+              <view class="voteTargetContainer">
+                <text>{{ userInfo[record.targetId].nickName }}</text>获得了<text>{{ record.count }}票</text>
+              </view>
+              <view class="voteSourceContainer">
+                <view class="voteSource"  wx:key="*this" wx:for-item="source" wx:for="{{ record.source }}">
+                  <image class="voteAvatarSource" mode="aspectFill" role="img" src="{{ userInfo[source].avatarUrl }}" />
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
   </view>
   <view class="buttonWrapper" wx:if="{{ game && roleInfo[openid] === 0 }}">
     <button wx:if="{{ game.status === 0 }}" class="button" catchtap="onStartGame">开始捉鬼</button>
-    <button wx:if="{{ game.status === 1 }}" class="button" catchtap="onEndGame">结束捉鬼</button>
+    <button wx:if="{{ game.status === 1 }}" class="button" catchtap="onHostOperation">裁判操作</button>
+  </view>
+  <view class="buttonWrapper" wx:if="{{ game && game.status === 1 && roleInfo[openid] !== 0 }}">
+    <button class="button" wx:if="{{ !isReviewingVote }}" catchtap="onReviewVote">查看投票结果</button>
+    <button class="button" wx:if="{{ isReviewingVote }}" catchtap="onReviewVote">隐藏投票结果</button>
   </view>
 </component-auth>

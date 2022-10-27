@@ -18,6 +18,13 @@ const likeUserActions = [
   '🚫取消评价',
 ];
 
+const hostOperations = [
+  '查看或隐藏投票结果',
+  '开启一轮投票',
+  '结束当前投票',
+  '结束游戏'
+]
+
 const gameDetailResults = [
   '人获胜-只有人猜出',
   '人躺赢-鬼跳鬼失败',
@@ -42,33 +49,13 @@ new Page({
 
   onAuthReady: function() {
     Promise.resolve()
-        .then((_) => {
-          wx.showLoading({title: '加载房间中'});
-        })
-        .then((_) => wx.cloud.callFunction({
-          name: 'joinRoomV2', data: {id: this.data.gameid},
-        }))
+        .then((_) => { wx.showLoading({title: '加载房间中'}) })
+        .then((_) => wx.cloud.callFunction({ name: 'joinRoomV2', data: { id: this.data.gameid } }))
         .then((res) => res.result)
-        .then((r) => {
-          if (r.error) {
-            throw Error(r.error);
-          }
-          return r;
-        })
-        .then((r) => {
-          this.setData({
-            openid: r.openid,
-            gameid: r.gameid,
-          });
-          return r.gameid;
-        })
-        .then((gameid) => {
-          wx.hideLoading();
-          return gameid;
-        })
-        .then((gameid) => {
-          this.initWatcher(gameid);
-        })
+        .then((r) => { if (r.error) { throw Error(r.error); } return r; })
+        .then((r) => { this.setData({ openid: r.openid, gameid: r.gameid, }); return r.gameid; })
+        .then((gameid) => { wx.hideLoading(); return gameid; })
+        .then((gameid) => { this.initWatcher(gameid); })
         .catch((err) => {
           wx.hideLoading();
           wx.showModal({
@@ -87,8 +74,9 @@ new Page({
     const db = wx.cloud.database();
 
     const onStatusChange = (snapshot) => {
-      if (snapshot.docs[0]) {
-        this.setData({game: snapshot.docs[0]});
+      const game = snapshot.docs[0]
+      if (game) {
+        this.setData({ game: game });
       }
     };
 
@@ -224,19 +212,61 @@ new Page({
   onStartGame: function() {
     wx.cloud.callFunction({name: 'startGameV2', data: {id: this.data.gameid}})
         .then((res) => res.result)
-        .then((r) => {
-          if (r.error) {
-            throw Error(r.error);
-          }
-          return r;
-        })
-        .catch((e) => {
-          wx.showModal({
-            title: '开始游戏失败',
-            content: e.message,
-            showCancel: false,
-          });
-        });
+        .then((r) => { if (r.error) { throw Error(r.error); } return r; })
+        .catch((e) => { wx.showModal({ title: '开始游戏失败', content: e.message, showCancel: false }); });
+  },
+
+  onHostOperation: function() {
+    wx.showActionSheet({
+      itemList: hostOperations,
+      success: res => {
+        switch (res.tapIndex) {
+          case 0: this.onReviewVote(); break;
+          case 1: this.onStartVote(); break;
+          case 2: this.onEndVote(); break;
+          case 3: this.onEndGame(); break;
+          default: break;
+        }
+      }
+    })
+  },
+
+  onReviewVote: function() {
+    this.setData({ isReviewingVote: !this.data.isReviewingVote })
+  },
+
+  onStartVote: function() {
+    const db = wx.cloud.database().collection('ghost');
+    const gid = this.data.game._id;
+    const doc = db.doc(gid);
+    doc.update({ data: { currentVote: new Map() } })
+      .catch(e => { wx.showModal({ title: '开始投票出错', content: e.message, showCancel: false }) });
+  },
+
+  onEndVote: function() {
+    if (!this.data.game.currentVote) {
+      return
+    }
+
+    const currentVote = this.data.game.currentVote;
+    const voteResult = {}
+
+    Object.keys(currentVote).forEach(openid => {
+      const targetId = currentVote[openid]
+      const record = voteResult[targetId] ?? { targetId: targetId, count: 0, source: [] }
+      record.count = record.count + 1;
+      record.source = [...record.source, openid]
+      voteResult[targetId] = record
+    })
+
+    const voteResultArray = Object.keys(voteResult).map(key => voteResult[key]).sort(record => -record.count)
+
+    const db = wx.cloud.database().collection('ghost');
+    const gid = this.data.game._id;
+    const doc = db.doc(gid);
+    const votes = [voteResultArray, ...(this.data.game.votes ?? [])];
+    doc.update({ data: { currentVote: null, votes: votes } })
+      .catch(e => { wx.showModal({ title: '结束投票出错', content: e.message, showCancel: false }) });
   },
 
   onEndGame: function() {
@@ -279,6 +309,7 @@ new Page({
     const shouldHandleMoveUser = gs === 1;
     const shouldHandleKickUser = gs === 0 && tid !== cid && fid === cid;
     const shouldHandleLikeUser = gs !== 0 && tid !== fid;
+    const shouldHandleVoteUser = gs === 1 && tid !== cid && fid !== cid && this.data.game.currentVote
 
     const handleEmoji = (emoji) => {
       const handleEditNote = (_) => {
@@ -358,12 +389,23 @@ new Page({
         });
       };
 
+      const handleVoteUser = (_) => {
+        const currentVote = this.data.game.currentVote;
+        currentVote[fid] = tid;
+        const db = wx.cloud.database().collection('ghost');
+        const gid = this.data.game._id;
+        const doc = db.doc(gid);
+        doc.update({ data: { currentVote: currentVote } })
+          .catch(e => { wx.showModal({ title: '投票出错', content: e.message, showCancel: false }) });
+      }
+
       Promise.resolve()
           .then((_) => {
             switch (emoji) {
               case '⚽️': return handleKickUser();
               case '📝': return handleEditNote();
               case '📍': return handleMarkUser();
+              case '🫵': return handleVoteUser();
               case '🔀': return handleMoveUser();
               case '💬': return handleLikeUser();
               default: break;
@@ -372,44 +414,15 @@ new Page({
     };
 
     Promise.resolve([])
-        .then((r) => {
-          if (shouldHandleEditNote) {
-            r.push('📝添加备注');
-          }
-          return r;
-        })
-        .then((r) => {
-          if (shouldHandleMarkUser) {
-            r.push('📍标记用户');
-          }
-          return r;
-        })
-        .then((r) => {
-          if (shouldHandleMoveUser) {
-            r.push('🔀移动用户');
-          }
-          return r;
-        })
-        .then((r) => {
-          if (shouldHandleKickUser) {
-            r.push('⚽️踢出' + name);
-          }
-          return r;
-        })
-        .then((r) => {
-          if (shouldHandleLikeUser) {
-            r.push('💬评价' + name);
-          }
-          return r;
-        })
+        .then((r) => { if (shouldHandleEditNote) { r.push('📝添加备注'); } return r; })
+        .then((r) => { if (shouldHandleMarkUser) { r.push('📍标记玩家'); } return r; })
+        .then((r) => { if (shouldHandleVoteUser) { r.push('🫵票出玩家'); } return r; })
+        .then((r) => { if (shouldHandleMoveUser) { r.push('🔀移动玩家'); } return r; })
+        .then((r) => { if (shouldHandleKickUser) { r.push('⚽️踢出' + name); } return r; })
+        .then((r) => { if (shouldHandleLikeUser) { r.push('💬评价' + name); } return r; })
         .then((r) => {
           if (r.length > 0) {
-            wx.showActionSheet({
-              itemList: r,
-              success: (tap) => {
-                handleEmoji(r[tap.tapIndex].substr(0, 2));
-              },
-            });
+            wx.showActionSheet({ itemList: r, success: (tap) => { handleEmoji(r[tap.tapIndex].substr(0, 2)); }, });
           }
         });
   },
