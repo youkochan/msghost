@@ -1,4 +1,4 @@
-const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0';
+const defaultAvatarUrl = 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132';
 
 new Component({
   data: {
@@ -8,7 +8,9 @@ new Component({
 
   methods: {
     onChooseAvatar(e) {
-      this.setData({ avatarUrl: e.detail })
+      console.log('onChooseAvatar', e);
+      const avatarUrl = e.detail.avatarUrl;
+      this.setData({ avatarUrl })
     },
 
     onInput: function(e) {
