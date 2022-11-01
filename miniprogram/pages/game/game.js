@@ -45,6 +45,7 @@ new Page({
     userInfo: {},
     reviewInfo: {},
     targetOpenid: '',
+    avatarInfo: {},
   },
 
   onAuthReady: function() {
@@ -105,7 +106,10 @@ new Page({
       snapshot.docs.forEach((player) => {
         if (!this.data.userInfo[player.openid]) {
           db.collection('user').doc(player.openid).get().then((res) => {
-            this.setData({['userInfo.' + player.openid]: res.data.userInfo});
+            const nickName = res.data.userInfo.nickName ?? '👻';
+            const avatar = String.fromCodePoint(nickName.codePointAt(0));
+            this.setData({ ['userInfo.' + player.openid]: res.data.userInfo});
+            this.setData({ ['avatarInfo.' + player.openid]: avatar })
           });
         }
       });

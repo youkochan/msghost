@@ -33,12 +33,9 @@
     <scroll-view class="list" scroll-y="true">
       <view class="itemWrapper" wx:key="*this" wx:if="{{ userInfo[item] }}" wx:for="{{ players }}">
         <view class="item {{ game && game.status === 1 && game.currentVote[item] !== undefined ? 'voted' : '' }}">
-          <image class="avatar" mode="aspectFill"
-            src="{{ userInfo[item].avatarUrl }}"
-            catchtap="onAvatarTap"
-            data-openid="{{ item }}"
-          />
-
+          <view class="avatar"  catchtap="onAvatarTap" data-openid="{{ item }}">
+            {{ avatarInfo[item] }}
+          </view>
           <view class="info" wx:if="{{ game.status === 0 }}" catchtap="onUserTap" data-openid="{{ item }}">
             <text class="nickname">{{ userInfo[item].nickName }}</text>
           </view>
@@ -83,14 +80,16 @@
         <view class="voteContainer" wx:key="*this" wx:for-item="vote" wx:for="{{ game.votes }}">
           <text class="voteTitle">第{{ game.votes.length - index }}轮投票结果</text>
           <view class="voteRecord"  wx:key="*this" wx:for-item="record" wx:for="{{ vote }}">
-            <image class="voteAvatar" mode="aspectFill" role="img" src="{{ userInfo[record.targetId].avatarUrl }}" />
+            <view class="voteAvatar">
+              {{ avatarInfo[record.targetId] }}
+            </view>
             <view class="voteContent">
               <view class="voteTargetContainer">
                 <text>{{ userInfo[record.targetId].nickName }}</text>获得了<text>{{ record.count }}票</text>
               </view>
               <view class="voteSourceContainer">
-                <view class="voteSource"  wx:key="*this" wx:for-item="source" wx:for="{{ record.source }}">
-                  <image class="voteAvatarSource" mode="aspectFill" role="img" src="{{ userInfo[source].avatarUrl }}" />
+                <view class="voteAvatarSource"  wx:key="*this" wx:for-item="source" wx:for="{{ record.source }}">
+                  {{ avatarInfo[source] }}
                 </view>
               </view>
             </view>

@@ -122,6 +122,14 @@
 }
 
 .game .list .item .avatar {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background-color: white;
+  color: #25aae1;
+  font-size: 30px;
+  font-weight: bolder;
+  line-height: 30px;
   width: 60px;
   height: 60px;
   border-radius: 30px;
@@ -286,6 +294,13 @@
 }
 
 .voteAvatar {
+  background-color: white;
+  font-size: 30px;
+  color: #25aae1;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  line-height: 30px;
   width: 60px;
   height: 60px;
   border-radius: 30px;
@@ -307,4 +322,11 @@
   width: 24px;
   height: 24px;
   border-radius: 12px;
+  font-size: 12px;
+  line-height: 12px;
+  background-color: white;
+  color: #25aae1;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }

@@ -1,18 +1,9 @@
-const defaultAvatarUrl = 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132';
-
 new Component({
   data: {
-    authorized: true,
-    avatarUrl: defaultAvatarUrl
+    authorized: true
   },
 
   methods: {
-    onChooseAvatar(e) {
-      console.log('onChooseAvatar', e);
-      const avatarUrl = e.detail.avatarUrl;
-      this.setData({ avatarUrl })
-    },
-
     onInput: function(e) {
       this.setData({ nickName: e.detail.value })
     },
@@ -35,25 +26,11 @@ new Component({
         return;
       }
 
-      if (this.data.avatarUrl === defaultAvatarUrl) {
-        wx.showModal({
-          title: '头像未设置',
-          content: '点击确定重新编辑头像',
-          showCancel: true,
-          success: (res) => {
-            if (res.cancel) {
-              this.onUploadUserInfo()
-            }
-          },
-        });
-        return;
-      }
-
       this.onUploadUserInfo()
     },
 
     onUploadUserInfo: function() {
-      const userInfo = { nickName: this.data.nickName, avatarUrl: this.data.avatarUrl };
+      const userInfo = { nickName: this.data.nickName };
       wx.setStorage({ key: 'CACHED_USER_INFO', data: JSON.stringify(userInfo) })
         .then(_ => wx.cloud.callFunction({ name: 'updateInfo', data: { userInfo: userInfo } }))
         .then(_ => this.triggerEvent('AuthReady', {}, {}))

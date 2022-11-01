@@ -1,9 +1,6 @@
 <view wx:if="{{ !authorized }}" class="wrapper">
-  <text class="h1">设置昵称以及头像</text>
-  <text class="h2">捉鬼助手需要您的信息（昵称、头像等）来展示游戏进度、游戏结果等</text>
-  <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-    <image class="avatar" src="{{avatarUrl}}"></image>
-  </button>
+  <text class="h1">设置昵称</text>
+  <text class="h2">捉鬼助手需要您的昵称来展示游戏进度、游戏结果等</text>
   <input type="nickname" class="input" placeholder="请输入昵称" bindblur="onInputBlur" bindconfirm="onInputConfirm" bindinput="onInput"/>
   <button class="btn" catchtap="onFinish">完成</button>
 </view>

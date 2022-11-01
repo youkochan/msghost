@@ -17,6 +17,9 @@ new Page({
           const p1 = value(data.winAsGhostCount, data.playAsGhostCount);
           const p2 = value(data.winAsPlayerCount, data.playAsPlayerCount);
 
+          const nickName = res.result.list[0].userInfo.nickName ?? '👻';
+          const avatar = String.fromCodePoint(nickName.codePointAt(0));
+
           this.setData({
             data: [
               [
@@ -40,6 +43,7 @@ new Page({
               ],
             ],
             userInfo: res.result.list[0].userInfo,
+            avatar: avatar,
           });
         })
         .catch((err) => {
