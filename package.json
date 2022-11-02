@@ -1,10 +1,12 @@
 {
-  "name": "miniprogram",
+  "name": "msghost",
   "version": "1.0.0",
   "description": "msghost",
   "main": "home.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "node node_modules/prettier/bin-prettier.js -w ./miniprogram",
+    "build": "node node_modules/typescript/lib/tsc.js;"
   },
   "repository": {
     "type": "git",
@@ -18,6 +20,11 @@
   "homepage": "https://github.com/youkochan/msghost#readme",
   "devDependencies": {
     "eslint": "^7.18.0",
-    "eslint-config-google": "^0.14.0"
+    "eslint-config-google": "^0.14.0",
+    "@types/wechat-miniprogram": "^3.4.1",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "prettier": "^2.7.1"
   }
 }

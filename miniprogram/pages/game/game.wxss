@@ -18,7 +18,7 @@
   flex-shrink: 0;
   position: relative;
   transform-style: preserve-3d;
-  transition: transform .3s;
+  transition: transform 0.3s;
 }
 
 .game .title .card {
@@ -30,16 +30,22 @@
 }
 
 .game .title .card.back {
-	transform: rotateX(180deg);
+  transform: rotateX(180deg);
 }
 
 .flipped {
-	transform: rotateX(180deg);
+  transform: rotateX(180deg);
 }
 
 .game .title .card .textWrapper {
   background-size: 300% 100%;
-  background-image: linear-gradient(to right, #25aae1, #40e495, #30dd8a, #2bb673);
+  background-image: linear-gradient(
+    to right,
+    #25aae1,
+    #40e495,
+    #30dd8a,
+    #2bb673
+  );
   box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
   margin: 10px 20px;
   display: flex;
@@ -50,7 +56,13 @@
   border-radius: 10px;
 }
 .game .title .card.back .textWrapper {
-  background-image: linear-gradient(to right, #fc6076, #ff9a44, #ef9d43, #e75516);
+  background-image: linear-gradient(
+    to right,
+    #fc6076,
+    #ff9a44,
+    #ef9d43,
+    #e75516
+  );
   box-shadow: 0 4px 15px 0 rgba(252, 104, 110, 0.75);
 }
 
@@ -110,7 +122,13 @@
 
 .game .list .item.voted {
   background-size: 300% 100%;
-  background-image: linear-gradient(to right, #0ba360, #3cba92, #30dd8a, #2bb673);
+  background-image: linear-gradient(
+    to right,
+    #0ba360,
+    #3cba92,
+    #30dd8a,
+    #2bb673
+  );
   box-shadow: 0 4px 15px 0 rgba(23, 168, 108, 0.75);
 }
 
@@ -238,7 +256,7 @@
   height: 75%;
   width: 100%;
   background-color: white;
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
 .actionCard.presenting {

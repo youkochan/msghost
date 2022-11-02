@@ -1,6 +1,9 @@
 {
   "miniprogramRoot": "miniprogram/",
   "cloudfunctionRoot": "cloudfunctions/",
+  "useCompilerPlugins": [
+    "typescript"
+  ],
   "setting": {
     "urlCheck": true,
     "es6": true,
@@ -68,5 +71,8 @@
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
+  },
+  "scripts": {
+    "beforeCompile": "npm run build"
   }
 }

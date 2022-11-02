@@ -14,23 +14,27 @@
   align-items: center;
   justify-content: center;
   background-color: #dddddd;
-  transition: all .3s;
+  transition: all 0.3s;
 
-
-  background-color:#57fa57;
-  background:linear-gradient(#57fac4,#0a81fe);
+  background-color: #57fa57;
+  background: linear-gradient(#57fac4, #0a81fe);
 }
 .container:after {
   z-index: 0;
   position: absolute;
-  content:'';
-  height:100%;
-  width:100%;
-  display:block;
-  background-image:linear-gradient(90deg, rgba(255,255,255,.25) 1px, rgba(0,0,0,0) 1px), linear-gradient(0deg, rgba(255,255,255,.25) 1px, rgba(0,0,0,0) 1px);
-  background-position:0px 1px;
-  background-repeat:repeat;
-  background-size:20px 20px;
+  content: "";
+  height: 100%;
+  width: 100%;
+  display: block;
+  background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.25) 1px,
+      rgba(0, 0, 0, 0) 1px
+    ),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.25) 1px, rgba(0, 0, 0, 0) 1px);
+  background-position: 0px 1px;
+  background-repeat: repeat;
+  background-size: 20px 20px;
 }
 
 .container.blur {
@@ -49,26 +53,50 @@
   line-height: 10vh;
   border-radius: 5vh;
   color: #fff;
-  background-size: 300% 100%; 
+  background-size: 300% 100%;
 }
 
 .homeButton.normal {
-  background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376);
+  background-image: linear-gradient(
+    to right,
+    #29323c,
+    #485563,
+    #2b5876,
+    #4e4376
+  );
   box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.75);
 }
 
 .homeButton.reward {
-  background-image: linear-gradient(to right, #ed6ea0, #ec8c69, #f7186a , #FBB03B);
+  background-image: linear-gradient(
+    to right,
+    #ed6ea0,
+    #ec8c69,
+    #f7186a,
+    #fbb03b
+  );
   box-shadow: 0 4px 15px 0 rgba(236, 116, 149, 0.75);
 }
 
 .homeButton.cancel {
-  background-image: linear-gradient(to right, #eb3941, #f15e64, #e14e53, #e2373f);
-  box-shadow: 0 5px 15px rgba(242, 97, 103, .4);
+  background-image: linear-gradient(
+    to right,
+    #eb3941,
+    #f15e64,
+    #e14e53,
+    #e2373f
+  );
+  box-shadow: 0 5px 15px rgba(242, 97, 103, 0.4);
 }
 
 .homeButton.confirm {
-  background-image: linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed);
+  background-image: linear-gradient(
+    to right,
+    #25aae1,
+    #4481eb,
+    #04befe,
+    #3f86ed
+  );
   box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
 }
 
@@ -94,7 +122,7 @@
   height: 60%;
   width: 100%;
   background-color: white;
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
 .actionCard .inputGroup {

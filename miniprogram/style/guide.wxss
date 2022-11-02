@@ -92,7 +92,7 @@ page {
   line-height: 36rpx;
   border-radius: 6rpx;
   color: #fff;
-  white-space: pre
+  white-space: pre;
 }
 
 .guide image {
@@ -141,4 +141,3 @@ page {
 .guide .nav .next {
   margin-right: unset;
 }
-
