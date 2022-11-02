@@ -1,4 +1,8 @@
-import type { HomePageData, HomePageGameData, HomePageUserOperation } from "./home.d";
+import type {
+  HomePageData,
+  HomePageGameData,
+  HomePageUserOperation,
+} from "./home.d";
 
 Page<HomePageData, HomePageUserOperation>({
   data: {
