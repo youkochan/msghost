@@ -239,22 +239,31 @@ new Page({
   },
 
   onStartGame: function () {
-    wx.cloud
-      .callFunction({ name: "startGameV2", data: { id: this.data.gameid } })
-      .then((res) => res.result)
-      .then((r) => {
-        if (r.error) {
-          throw Error(r.error);
+    const startGame = () => {
+      wx.cloud.callFunction({ name: "startGameV3", data: { id: this.data.gameid } })
+        .then((res) => res.result)
+        .then((r) => { if (r.error) { throw Error(r.error); } return r; })
+        .catch((e) => { wx.showModal({ title: "开始游戏失败", content: e.message, showCancel: false }) })
+    };
+
+    const count = this.data.players.length;
+
+    if (count < 4) {
+      wx.showModal({ title: "开始游戏失败", content: "人数过少，总人数最少四人", showCancel: false });
+      return;
+    }
+
+    if (count < 8) {
+      wx.showModal({ title: '游戏人数较少', content: '游戏总人数最好是八人以及以上，确定开始游戏吗？',
+        complete: (res) => {
+          if (res.cancel) { return; }
+          if (res.confirm) { startGame() }
         }
-        return r;
       })
-      .catch((e) => {
-        wx.showModal({
-          title: "开始游戏失败",
-          content: e.message,
-          showCancel: false,
-        });
-      });
+      return;
+    }
+
+    startGame();
   },
 
   onHostOperation: function () {
