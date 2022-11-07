@@ -6,18 +6,10 @@ Page({
         ui: {
             isPresentingJoinCard: false,
             isPresentingCreatingCard: false,
-            isPresentingRewardCard: false,
         },
     },
     onClearCacheTap: function () {
         wx.clearStorage({ success: (_) => { } });
-    },
-    onRewardTap: function () {
-        this.setData({
-            "ui.isPresentingRewardCard": true,
-            "ui.isPresentingJoinCard": false,
-            "ui.isPresentingCreatingCard": false,
-        });
     },
     onCreateTap: function () {
         this.setData({
@@ -30,7 +22,6 @@ Page({
         this.setData({
             "ui.isPresentingJoinCard": false,
             "ui.isPresentingCreatingCard": false,
-            "ui.isPresentingRewardCard": false,
         });
     },
     onMajorityWordConfirm: function (event) {

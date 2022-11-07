@@ -10,20 +10,11 @@ Page<HomePageData, HomePageUserOperation>({
     ui: {
       isPresentingJoinCard: false,
       isPresentingCreatingCard: false,
-      isPresentingRewardCard: false,
     },
   },
 
   onClearCacheTap: function () {
     wx.clearStorage({ success: (_) => {} });
-  },
-
-  onRewardTap: function () {
-    this.setData({
-      "ui.isPresentingRewardCard": true,
-      "ui.isPresentingJoinCard": false,
-      "ui.isPresentingCreatingCard": false,
-    });
   },
 
   onCreateTap: function () {
@@ -38,7 +29,6 @@ Page<HomePageData, HomePageUserOperation>({
     this.setData({
       "ui.isPresentingJoinCard": false,
       "ui.isPresentingCreatingCard": false,
-      "ui.isPresentingRewardCard": false,
     });
   },
 

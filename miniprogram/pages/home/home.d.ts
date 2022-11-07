@@ -5,7 +5,6 @@ export type InputConfirm = WechatMiniprogram.InputConfirm<{}, {}>;
  */
 export type HomePageUserOperation = {
   onClearCacheTap: () => void;
-  onRewardTap: () => void;
   onCreateTap: () => void;
   onCancelTap: () => void;
   onMajorityWordConfirm: (event: InputConfirm) => void;
@@ -31,7 +30,6 @@ export type HomePageGameData = {
 export type HomePageUIData = {
   isPresentingJoinCard: boolean;
   isPresentingCreatingCard: boolean;
-  isPresentingRewardCard: boolean;
 };
 
 /**
